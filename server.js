@@ -12,10 +12,23 @@ const converter = new showdown.Converter();
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// تحديد مسارات المقالات والصور
+const isVercel = process.env.VERCEL === "1";
+const articlesDir = isVercel ? "/tmp/articles" : "articles";
+const imagesDir = isVercel ? "/tmp/images" : "public/images";
+
+// تأكد من وجود المجلدات
+if (!fs.existsSync(articlesDir)) {
+  fs.mkdirSync(articlesDir, { recursive: true });
+}
+if (!fs.existsSync(imagesDir)) {
+  fs.mkdirSync(imagesDir, { recursive: true });
+}
+
 // تهيئة multer لرفع الملفات
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "public/images/");
+    cb(null, imagesDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -45,17 +58,12 @@ const upload = multer({
 app.use(express.static("public"));
 app.use(express.urlencoded({ extended: true }));
 
-// إنشاء مجلد المقالات إذا لم يكن موجودًا
-if (!fs.existsSync("articles")) {
-  fs.mkdirSync("articles");
-}
-
 // وظيفة مساعدة لقراءة المقالات
 async function getArticles() {
-  const files = await fs.readdir("articles");
+  const files = await fs.readdir(articlesDir);
   const articles = await Promise.all(
     files.map(async (file) => {
-      const content = await fs.readFile(path.join("articles", file), "utf8");
+      const content = await fs.readFile(path.join(articlesDir, file), "utf8");
       const metadata = content.match(/^---\n([\s\S]*?)\n---/);
       const body = content.replace(/^---\n[\s\S]*?\n---/, "").trim();
 
@@ -110,7 +118,7 @@ app.get("/editor", (req, res) => {
 
 app.get("/editor/:id", async (req, res) => {
   try {
-    const filePath = path.join("articles", `${req.params.id}.md`);
+    const filePath = path.join(articlesDir, `${req.params.id}.md`);
     const content = await fs.readFile(filePath, "utf8");
     const metadata = content.match(/^---\n([\s\S]*?)\n---/);
     const body = content.replace(/^---\n[\s\S]*?\n---/, "").trim();
@@ -142,7 +150,7 @@ app.get("/editor/:id", async (req, res) => {
 
 app.get("/post/:id", async (req, res) => {
   try {
-    const filePath = path.join("articles", `${req.params.id}.md`);
+    const filePath = path.join(articlesDir, `${req.params.id}.md`);
     const content = await fs.readFile(filePath, "utf8");
     const metadata = content.match(/^---\n([\s\S]*?)\n---/);
     const body = content.replace(/^---\n[\s\S]*?\n---/, "").trim();
@@ -182,7 +190,7 @@ app.post("/save-article", upload.single("image"), async (req, res) => {
     const id = articleId || uuidv4();
     const now = new Date().toISOString();
     const imagePath = req.file
-      ? `/images/${req.file.filename}`
+      ? path.join(imagesDir, req.file.filename)
       : req.body.existingImage || "";
 
     const content = `---
@@ -192,7 +200,7 @@ createdAt: ${now}
 updatedAt: ${now}
 ---\n\n${body}`;
 
-    await fs.writeFile(path.join("articles", `${id}.md`), content);
+    await fs.writeFile(path.join(articlesDir, `${id}.md`), content);
     res.redirect(`/post/${id}`);
   } catch (err) {
     res.status(500).render("error", { error: err.message });
@@ -201,7 +209,7 @@ updatedAt: ${now}
 
 app.post("/delete-article/:id", async (req, res) => {
   try {
-    await fs.unlink(path.join("articles", `${req.params.id}.md`));
+    await fs.unlink(path.join(articlesDir, `${req.params.id}.md`));
     res.redirect("/posts");
   } catch (err) {
     res.status(500).render("error", { error: err.message });
@@ -221,10 +229,10 @@ app.use((err, req, res, next) => {
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.clear(); // مسح الشاشة
-  console.log('\x1b[36m%s\x1b[0m', '===================================');
-  console.log('\x1b[32m%s\x1b[0m', '🚀 تم تشغيل الخادم بنجاح!');
-  console.log('\x1b[36m%s\x1b[0m', '===================================');
-  console.log('\x1b[33m%s\x1b[0m', '📍 يمكنك الوصول للموقع من خلال:');
-  console.log('\x1b[94m%s\x1b[0m', `http://localhost:${port}`);
-  console.log('\x1b[36m%s\x1b[0m', '===================================');
+  console.log("\x1b[36m%s\x1b[0m", "===================================");
+  console.log("\x1b[32m%s\x1b[0m", "🚀 تم تشغيل الخادم بنجاح!");
+  console.log("\x1b[36m%s\x1b[0m", "===================================");
+  console.log("\x1b[33m%s\x1b[0m", "📍 يمكنك الوصول للموقع من خلال:");
+  console.log("\x1b[94m%s\x1b[0m", `http://localhost:${port}`);
+  console.log("\x1b[36m%s\x1b[0m", "===================================");
 });
