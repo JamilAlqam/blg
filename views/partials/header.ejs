@@ -10,17 +10,17 @@
     />
     <link href="/css/style.css" rel="stylesheet" />
   </head>
-
-  <body>
-    <div class="container">
-      <header>
+  <body<% if (title === 'الصفحة الرئيسية') { %> class="index"<% } %>>
+  <div class="page-wrapper">
+    <header>
+      <div class="header-inner">
         <h1>
           <a href="/" style="text-decoration: none; color: inherit">مدونتي</a>
         </h1>
         <% if (typeof isListPage !== 'undefined' && isListPage) { %>
         <a href="/editor" class="button">مقال جديد</a>
         <% } %>
-      </header>
-    </div>
-  </body>
+      </div>
+    </header>
+  </div>
 </html>
