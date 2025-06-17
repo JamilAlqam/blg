@@ -1,34 +1,43 @@
 <%- include('partials/header', { title: article.title }); %>
 
-    <div id="article-detail">
-        <a href="/" class="button back-btn">العودة إلى القائمة</a>
+<div id="article-detail">
+  <a href="/posts" class="button back-btn">العودة إلى المقالات</a>
 
-        <article>
-            <h2 id="article-title">
-                <%= article.title %>
-            </h2>
-            <div class="meta">
-                <span id="article-date">تاريخ النشر: <%= new Date(article.createdAt).toLocaleDateString() %></span>
-                <% if (article.updatedAt && article.updatedAt !==article.createdAt) { %>
-                    <span id="article-updated"> - آخر تعديل: <%= new Date(article.updatedAt).toLocaleDateString() %>
-                            </span>
-                    <% } %>
-            </div>
-
-            <% if (article.image) { %>
-                <img id="article-image" src="<%= article.image %>" alt="<%= article.title %>">
-                <% } %>
-
-                    <div id="article-content"><%- article.body %></div>
-
-                    <div class="article-actions">
-                        <a href="/editor/<%= article.id %>" class="button edit-btn">تعديل</a>
-                        <form action="/delete-article/<%= article.id %>" method="POST"
-                            onsubmit="return confirm('هل أنت متأكد من حذف هذا المقال؟');">
-                            <button type="submit" class="button delete-btn">حذف</button>
-                        </form>
-                    </div>
-        </article>
+  <article>
+    <h2 id="article-title"><%= article.title %></h2>
+    <div class="meta">
+      <span id="article-date"
+        >تاريخ النشر: <%= new Date(article.createdAt).toLocaleDateString()
+        %></span
+      >
+      <% if (article.updatedAt && article.updatedAt !==article.createdAt) { %>
+      <span id="article-updated">
+        - آخر تعديل: <%= new Date(article.updatedAt).toLocaleDateString() %>
+      </span>
+      <% } %>
     </div>
 
-    <%- include('partials/footer'); %>
+    <% if (article.image) { %>
+    <img
+      id="article-image"
+      src="<%= article.image %>"
+      alt="<%= article.title %>"
+    />
+    <% } %>
+
+    <div id="article-content"><%- article.body %></div>
+
+    <div class="article-actions">
+      <a href="/editor/<%= article.id %>" class="button edit-btn">تعديل</a>
+      <form
+        action="/delete-article/<%= article.id %>"
+        method="POST"
+        onsubmit="return confirm('هل أنت متأكد من حذف هذا المقال؟');"
+      >
+        <button type="submit" class="button delete-btn">حذف</button>
+      </form>
+    </div>
+  </article>
+</div>
+
+<%- include('partials/footer'); %>
