@@ -1,17 +1,19 @@
 <%- include('partials/header', { title: 'الصفحة الرئيسية' }); %>
 
-<div class="welcome-section">
-  <h2>مرحباً بك في مدونتي</h2>
-  <p>هذه المدونة تتيح لك:</p>
-  <ul>
-    <li>كتابة وتحرير المقالات</li>
-    <li>إضافة الصور</li>
-    <li>تنسيق النصوص بسهولة</li>
-  </ul>
-  <div class="action-buttons">
-    <a href="/posts" class="button view-posts">عرض جميع المقالات</a>
-    <a href="/editor" class="button create-post">إنشاء مقال جديد</a>
-  </div>
-</div>
+<main class="container main-center">
+  <section class="welcome-section">
+    <h2>مرحباً بك في مدونتي</h2>
+    <p>هذه المدونة تتيح لك:</p>
+    <ul>
+      <li>كتابة وتحرير المقالات</li>
+      <li>إضافة الصور</li>
+      <li>تنسيق النصوص بسهولة</li>
+    </ul>
+    <div class="action-buttons">
+      <a href="/posts" class="button view-posts">عرض جميع المقالات</a>
+      <a href="/editor" class="button create-post">إنشاء مقال جديد</a>
+    </div>
+  </section>
+</main>
 
 <%- include('partials/footer'); %>
