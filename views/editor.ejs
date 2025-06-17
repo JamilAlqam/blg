@@ -1,46 +1,62 @@
 <%- include('partials/header', { title: title, isEditor: true }); %>
 
-    <h1 id="editor-title">
-        <%= title %>
-    </h1>
-
-    <form id="article-form" action="/save-article" method="POST" enctype="multipart/form-data">
-        <div class="form-group">
-            <label for="title">عنوان المقال:</label>
-            <input type="text" id="title" name="title" value="<%= typeof article !== 'undefined' && article ? article.title : '' %>" required>
-        </div>
-
-        <div class="form-group">
-            <label for="image">الصورة المعبرة:</label>
-            <input type="file" id="image" name="image" accept="image/*">
-            <div id="image-preview-container">
-                <% if (typeof article !== 'undefined' && article && article.image) { %>
-                    <img id="image-preview" src="<%= article.image %>" alt="معاينة الصورة">
-                    <input type="hidden" name="existingImage" value="<%= article.image %>">
-                <% } else { %>
-                    <img id="image-preview" src="" alt="معاينة الصورة" style="display: none;">
-                <% } %>
-            </div>
-        </div>
-
-        <div class="form-group">
-            <label>محتوى المقال:</label>
-            <div id="editor-container">
-                <div id="editor">
-                    <%= typeof article !== 'undefined' && article ? article.body : '' %>
-                </div>
-                <textarea id="hidden-body" name="body" style="display: none;"></textarea>
-            </div>
-        </div>
-
-        <div class="form-actions">
-            <button type="submit" id="save-btn">حفظ المقال</button>
-            <a href="/" id="cancel-btn" class="button">إلغاء</a>
-        </div>
-
-        <% if (typeof article !== 'undefined' && article) { %>
-            <input type="hidden" name="articleId" value="<%= article.id %>">
+<main class="container">
+  <h1 id="editor-title"><%= title %></h1>
+  <form
+    id="article-form"
+    action="/save-article"
+    method="POST"
+    enctype="multipart/form-data"
+  >
+    <div class="form-group">
+      <label for="title">عنوان المقال:</label>
+      <input
+        type="text"
+        id="title"
+        name="title"
+        value="<%= typeof article !== 'undefined' && article ? article.title : '' %>"
+        required
+      />
+    </div>
+    <div class="form-group">
+      <label for="image">الصورة المعبرة:</label>
+      <input type="file" id="image" name="image" accept="image/*" />
+      <div id="image-preview-container">
+        <% if (typeof article !== 'undefined' && article && article.image) { %>
+        <img
+          id="image-preview"
+          src="<%= article.image %>"
+          alt="معاينة الصورة"
+        />
+        <input
+          type="hidden"
+          name="existingImage"
+          value="<%= article.image %>"
+        />
+        <% } else { %>
+        <img
+          id="image-preview"
+          src=""
+          alt="معاينة الصورة"
+          style="display: none"
+        />
         <% } %>
-    </form>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>محتوى المقال:</label>
+      <div id="editor-container">
+        <div id="editor">
+          <%= typeof article !== 'undefined' && article ? article.body : '' %>
+        </div>
+        <textarea id="hidden-body" name="body" style="display: none"></textarea>
+      </div>
+    </div>
+    <div class="form-actions">
+      <button type="submit" id="save-btn">حفظ المقال</button>
+      <a href="/" id="cancel-btn" class="button">إلغاء</a>
+    </div>
+  </form>
+</main>
 
-    <%- include('partials/footer'); %>
+<%- include('partials/footer'); %>
