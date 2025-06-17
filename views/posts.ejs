@@ -1,26 +1,25 @@
 <%- include('partials/header', { title: 'المقالات' , isListPage: true }); %>
 
-    <div id="articles-list">
-        <h2>مقالاتي</h2>
-
-        <% if (articles.length===0) { %>
-            <p>لا توجد مقالات بعد.</p>
-            <% } else { %>
-                <div id="articles-container">
-                    <% articles.forEach(article=> { %>
-                        <div class="article-summary">
-                            <h3>
-                                <%= article.title %>
-                            </h3>
-                            <% if (article.image) { %>
-                                <img src="<%= article.image %>" alt="<%= article.title %>">
-                                <% } %>
-                                    <div class="excerpt"><%- article.excerpt %></div>
-                                    <a href="/post/<%= article.id %>" class="read-more">قراءة المزيد</a>
-                        </div>
-                        <% }); %>
-                </div>
-                <% } %>
+<main class="container main-center">
+  <section id="articles-list">
+    <h2>مقالاتي</h2>
+    <% if (articles.length===0) { %>
+    <p>لا توجد مقالات بعد.</p>
+    <% } else { %>
+    <div id="articles-container">
+      <% articles.forEach(article=> { %>
+      <div class="article-summary">
+        <h3><%= article.title %></h3>
+        <% if (article.image) { %>
+        <img src="<%= article.image %>" alt="<%= article.title %>" />
+        <% } %>
+        <div class="excerpt"><%- article.excerpt %></div>
+        <a href="/post/<%= article.id %>" class="read-more">قراءة المزيد</a>
+      </div>
+      <% }); %>
     </div>
+    <% } %>
+  </section>
+</main>
 
-    <%- include('partials/footer'); %>
+<%- include('partials/footer'); %>
