@@ -22,7 +22,24 @@ const storage = multer.diskStorage({
     cb(null, uniqueSuffix + path.extname(file.originalname));
   },
 });
-const upload = multer({ storage: storage });
+
+// فلترة الملفات
+const fileFilter = (req, file, cb) => {
+  // السماح فقط بملفات الصور
+  if (file.mimetype.startsWith("image/")) {
+    cb(null, true);
+  } else {
+    cb(new Error("يرجى رفع ملفات الصور فقط!"), false);
+  }
+};
+
+const upload = multer({
+  storage: storage,
+  fileFilter: fileFilter,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5 ميجابايت كحد أقصى
+  },
+});
 
 // Middleware
 app.use(express.static("public"));
@@ -191,8 +208,23 @@ app.post("/delete-article/:id", async (req, res) => {
   }
 });
 
-// بدء الخادم
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`الخادم يعمل على http://localhost:${PORT}`);
+// معالجة الأخطاء
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).render("error", {
+    title: "خطأ",
+    message: "حدث خطأ في الخادم",
+  });
+});
+
+// تحديد المنفذ
+const port = process.env.PORT || 3000;
+app.listen(port, () => {
+  console.clear(); // مسح الشاشة
+  console.log('\x1b[36m%s\x1b[0m', '===================================');
+  console.log('\x1b[32m%s\x1b[0m', '🚀 تم تشغيل الخادم بنجاح!');
+  console.log('\x1b[36m%s\x1b[0m', '===================================');
+  console.log('\x1b[33m%s\x1b[0m', '📍 يمكنك الوصول للموقع من خلال:');
+  console.log('\x1b[94m%s\x1b[0m', `http://localhost:${port}`);
+  console.log('\x1b[36m%s\x1b[0m', '===================================');
 });
